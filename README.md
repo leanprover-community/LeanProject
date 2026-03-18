@@ -61,6 +61,11 @@ To set up GitHub Pages for your repository, follow these steps:
 2. In the left sidebar, click on the **Pages** section.
 3. In the **Source** dropdown, select `GitHub Actions`.
 
+The workflow [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) builds the Jekyll site in
+[`website`](website), runs the
+[`upstreaming-dashboard-action`](https://github.com/leanprover-community/upstreaming-dashboard-action),
+and deploys the result to GitHub Pages.
+
 ## Repository Layout
 
 The template repository is organized as follows (listing the main folders and files):
@@ -73,6 +78,8 @@ The template repository is organized as follows (listing the main folders and fi
         and can be manually disabled by clicking on the **Actions** tab, selecting **Build Project**
         in the left sidebar, then clicking the horizontal triple dots (⋯) on the right,
         and choosing **Disable workflow**.
+        - [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) defines the workflow for building
+        and deploying the GitHub Pages site, including generation of the upstreaming dashboard.
         - [`create-release.yml`](.github/workflows/create-release.yml): defines the workflow for creating a new Git tag and GitHub release when the `lean-toolchain` file is updated in the `main` branch. Ensure the following settings are configured under **Settings > Actions > General > Workflow permissions**: "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests".
         - [`update.yml`](.github/workflows/update.yml) is the dependency
         update workflow to be triggered manually by default. [It's not documented yet, but it will be soon.]
@@ -86,6 +93,8 @@ The template repository is organized as follows (listing the main folders and fi
     - [`Example.lean`](Project/Example.lean) is a sample Lean file.
 - [`scripts`](scripts) contains scripts to update Mathlib ensuring that the latest version is
 fetched and integrated into the development environment.
+- [`website`](website) contains the Jekyll files for the GitHub Pages homepage that displays the
+upstreaming dashboard.
 - [`.gitignore`](.gitignore) specifies files and folders to be ignored by Git.
 and environment.
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) should contain the code of conduct for the project.
