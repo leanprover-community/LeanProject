@@ -49,11 +49,17 @@ def main(project_name):
     lakefile_toml = 'lakefile.toml'
     project_lean = 'Project.lean'
     build_project_yml = '.github/workflows/build-project.yml'
+    deploy_pages_yml = '.github/workflows/deploy-pages.yml'
     citation_bib = 'CITATION.bib'
+    website_config = 'website/_config.yml'
+    website_index = 'website/index.md'
 
     # Replace 'Project' with the actual project name in the necessary files
     replace_text_in_file(lakefile_toml, 'Project', project_name)
     replace_text_in_file(build_project_yml, 'Project', project_name)
+    replace_text_in_file(deploy_pages_yml, 'Project', project_name)
+    replace_text_in_file(website_config, 'Project', project_name)
+    replace_text_in_file(website_index, 'Project', project_name)
 
     # Rename 'Project' folder to match the project name
     rename_directory(project_folder, project_name)
