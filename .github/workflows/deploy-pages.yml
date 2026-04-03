@@ -37,7 +37,7 @@ jobs:
           # relevant-labels: "label1,label2"  # Group PRs by 'relevant' based on these labels
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
