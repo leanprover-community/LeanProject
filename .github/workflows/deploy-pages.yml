@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # See https://github.com/leanprover-community/upstreaming-dashboard-action
       # for more details on how this action works and its parameters
