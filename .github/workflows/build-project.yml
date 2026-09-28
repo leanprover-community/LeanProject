@@ -36,7 +36,7 @@ jobs:
     name: Build project
     steps:
       - name: Checkout project
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 0 # Fetch all history for all branches and tags
 
@@ -52,7 +52,7 @@ jobs:
           ~/.elan/bin/lake exe mk_all --check || echo "ERROR: please ensure that Project.lean is up to date, for instance by running lake exe mk_all"
 
       - name: Cache build artifacts
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6
         with:
           path: .lake/build
           key: LakeBuild-${{ runner.os }}-${{ hashFiles('lean-toolchain') }}-${{ hashFiles('lake-manifest.json') }}
