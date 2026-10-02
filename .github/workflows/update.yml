@@ -15,7 +15,7 @@ jobs:
       - name: Run the action
         id: check-for-updates
         # Beware, when copy-pasting, that this next line must not include `do-update`.
-        uses: leanprover-community/mathlib-update-action@30121004826adb85f006e31ce5d25a33ce79c7a6 # 2025-06-16
+        uses: leanprover-community/mathlib-update-action@f8e3259913597ef668a7b360aa97eb3ebdfbc4c9 # main
         # START CONFIGURATION BLOCK 1
         # END CONFIGURATION BLOCK 1
   do-update: # Runs the upgrade, tests it, and makes a PR/issue/commit.
@@ -34,7 +34,7 @@ jobs:
       - name: Run the action
         id: update-the-repo
         # Beware, when copy-pasting, that this next line must include `do-update`.
-        uses: leanprover-community/mathlib-update-action/do-update@30121004826adb85f006e31ce5d25a33ce79c7a6 # 2025-06-16
+        uses: leanprover-community/mathlib-update-action/do-update@f8e3259913597ef668a7b360aa97eb3ebdfbc4c9 # main
         with:
           tag: ${{ matrix.tag }}
           # START CONFIGURATION BLOCK 2
