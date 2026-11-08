@@ -1,13 +1,21 @@
 name: Build and Deploy Pages
 
+# This workflow builds a GitHub Pages site with the upstreaming dashboard. It is disabled by
+# default: only the manual trigger is active. Choose one of the following:
+#
+# - Your project has a blueprint: delete this file and the `website` folder. The workflow that
+#   `leanblueprint new` creates should deploy the site instead. See the README, section
+#   "Blueprint", step 4, to add the dashboard there.
+# - Your project has no blueprint: uncomment the `push` and `schedule` triggers below, then
+#   delete this comment.
 on:
-  push:
-    branches:
-      - main
-      - master
-  schedule:
-    - cron: '0 6 * * *'
   workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  # schedule:
+  #   - cron: '0 6 * * *'
 
 concurrency:
   group: github-pages
@@ -24,6 +32,11 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # `blueprint.yml`, created by `leanblueprint new`, deploys the whole site too. Running both
+      # workflows would overwrite the site, so stop here when that file exists.
+      - name: Stop if a blueprint workflow exists
+        run: test ! -f .github/workflows/blueprint.yml || { echo "::error::blueprint.yml also deploys the site; see the README, Blueprint, step 4"; exit 1; }
 
       # See https://github.com/leanprover-community/upstreaming-dashboard-action
       # for more details on how this action works and its parameters
