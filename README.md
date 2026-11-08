@@ -61,10 +61,18 @@ To set up GitHub Pages for your repository, follow these steps:
 2. In the left sidebar, click on the **Pages** section.
 3. In the **Source** dropdown, select `GitHub Actions`.
 
-The workflow [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) builds the Jekyll site in
-[`website`](website), runs the
-[`upstreaming-dashboard-action`](https://github.com/leanprover-community/upstreaming-dashboard-action),
-and deploys the result to GitHub Pages.
+One workflow deploys the site. Which one depends on your project:
+
+- Projects with a blueprint deploy the site from the workflow that `leanblueprint new` creates.
+  Follow the [Blueprint](#blueprint) section below. Its
+  [step 4](#4-add-the-upstreaming-dashboard-to-the-blueprint-workflow) adds the upstreaming
+  dashboard to that workflow.
+- Projects without a blueprint deploy the site from
+  [`deploy-pages.yml`](.github/workflows/deploy-pages.yml). This workflow builds the Jekyll site in
+  [`website`](website), runs the
+  [`upstreaming-dashboard-action`](https://github.com/leanprover-community/upstreaming-dashboard-action),
+  and deploys the result to GitHub Pages. It is disabled by default. To enable it, follow the
+  instructions in the comments at the top of the file.
 
 ## Repository Layout
 
@@ -79,7 +87,8 @@ The template repository is organized as follows (listing the main folders and fi
         in the left sidebar, then clicking the horizontal triple dots (⋯) on the right,
         and choosing **Disable workflow**.
         - [`deploy-pages.yml`](.github/workflows/deploy-pages.yml) defines the workflow for building
-        and deploying the GitHub Pages site, including generation of the upstreaming dashboard.
+        and deploying a GitHub Pages site with the upstreaming dashboard, for projects without a
+        blueprint. It is disabled by default (see **Configure GitHub Pages** above).
         - [`create-release.yml`](.github/workflows/create-release.yml): defines the workflow for creating a new Git tag and GitHub release when the `lean-toolchain` file is updated in the `main` branch. Ensure the following settings are configured under **Settings > Actions > General > Workflow permissions**: "Read and write permissions" and "Allow GitHub Actions to create and approve pull requests".
         - [`update.yml`](.github/workflows/update.yml) is the dependency
         update workflow to be triggered manually by default. [It's not documented yet, but it will be soon.]
@@ -93,8 +102,9 @@ The template repository is organized as follows (listing the main folders and fi
     - [`Example.lean`](Project/Example.lean) is a sample Lean file.
 - [`scripts`](scripts) contains scripts to update Mathlib ensuring that the latest version is
 fetched and integrated into the development environment.
-- [`website`](website) contains the Jekyll files for the GitHub Pages homepage that displays the
-upstreaming dashboard.
+- [`website`](website) contains the Jekyll files for the GitHub Pages homepage of projects without
+a blueprint, which displays the upstreaming dashboard. Projects with a blueprint use `home_page`
+instead (see the Blueprint section below).
 - [`.gitignore`](.gitignore) specifies files and folders to be ignored by Git.
 and environment.
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) should contain the code of conduct for the project.
@@ -188,7 +198,42 @@ Configure continuous integration to compile blueprint? [y/n] (y):
 For more details about the LeanBlueprint package and its commands, please refer to its
 [documentation](https://github.com/PatrickMassot/leanblueprint/tree/master#starting-a-blueprint).
 
-After configuring the blueprint, please wait for the GitHub Action workflow to finish.
+### 4. Add the Upstreaming Dashboard to the Blueprint Workflow
+
+`leanblueprint new` creates the workflow `.github/workflows/blueprint.yml`. This workflow builds
+the blueprint, the API documentation and the home page in `home_page`, and deploys them to
+GitHub Pages. To show the
+[upstreaming dashboard](https://github.com/leanprover-community/upstreaming-dashboard-action)
+on that site:
+
+1. Add this step to `.github/workflows/blueprint.yml`, before the step
+   `Compile blueprint and documentation`, where `Project` must be replaced by the name of your project:
+
+   ```yaml
+      - name: Generate upstream dashboard snippets
+        uses: leanprover-community/upstreaming-dashboard-action@cdeaeff56d9531a75a19e8b9106def00c588c688 # main as of 2026-10-12
+        with:
+          website-directory: home_page
+          project-name: Project
+          branch-name: ${{ github.event.repository.default_branch }}
+   ```
+
+2. Add the dashboard to the home page. For example, add this line at the end of `home_page/index.md`:
+
+   ```
+   {% include _upstreaming_dashboard/dashboard.md %}
+   ```
+
+   See the action's [README](https://github.com/leanprover-community/upstreaming-dashboard-action#generated-files)
+   for customization options.
+
+3. Delete `.github/workflows/deploy-pages.yml` and the `website` folder, if you have not done so
+   already. Your project should not use them.
+
+Do not enable `deploy-pages.yml` in a project with a blueprint. Two workflows that each deploy the
+whole site overwrite each other.
+
+After these steps, commit and push, then wait for the workflow **Compile blueprint** to finish.
 You can keep track of the progress in the **Actions** tab of your repository.
 
 ## Selected Projects Using this Template
